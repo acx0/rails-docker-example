@@ -1,0 +1,36 @@
+FROM debian:bullseye-slim
+
+# note: proof of concept; this bakes in a lot of unnecessary artifacts
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        autoconf \
+        bison \
+        bzip2 \
+        ca-certificates \
+        curl \
+        g++ \
+        gcc \
+        git \
+        libffi-dev \
+        libgdbm6 \
+        libgdbm-dev \
+        libncurses5-dev \
+        libreadline-dev \
+        libsqlite3-dev \
+        libssl-dev \
+        libyaml-dev \
+        make \
+        zlib1g-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+ADD ./scripts /scripts
+RUN bash -l /scripts/install-ruby.sh
+RUN bash -l /scripts/install-rails.sh
+RUN bash -l /scripts/install-node.sh
+RUN bash -l /scripts/install-yarn.sh
+RUN bash -l /scripts/init-rails-demo.sh
+
+ENTRYPOINT bash -l /scripts/start-rails-demo.sh
+
+# vim: set ft=dockerfile :
